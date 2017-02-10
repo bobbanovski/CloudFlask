@@ -3,7 +3,7 @@ import os
 # Press n to advance, c to continue
 # print(i) to see value
 
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, url_for, redirect
 #Define instance of flask class
 app = Flask(__name__) #Ensures unique application name
 
@@ -28,9 +28,23 @@ def hello(name=None): # None = not required
     
 @app.route('/login', methods=['GET', 'POST']) #Form submitted with GET method
 def login():
+    error = None
     if request.method == 'POST':
-        return 'username entered was: %s' % request.values["username"] # %d already assigned to int
-    return '<form method="post" action="/login"><input type="text" name="username" /><br/><button type=submit>Submit</button></form>'
+        if (valid_login(request.form['username'], request.form['password'])): # %d already assigned to int
+            return redirect(url_for('welcome', username=request.form.get('username')))
+        else:
+            error = 'incorrect username or password'
+    return render_template('login.html', error=error)
+    
+def valid_login(username, password):
+    if username == password:
+        return True
+    else:
+        return False
+        
+@app.route('/welcome/<username>')
+def welcome(username):
+    return render_template('welcome.html', username=username)
     
 #called from terminal, command line
 if __name__ == '__main__': 
