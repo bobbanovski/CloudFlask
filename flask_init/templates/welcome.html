@@ -1,8 +1,9 @@
-<!DOCTYPE html>
-<html>
-    <title>Welcome, {{ username }}</title>
-</html>
+{% extends "templateBase.html" %}
 
-<body>
+{% block title %} Welcome Page {% endblock %}
+
+
+{% block content %}
     <h3>Welcome, {{ username }}</h3>
-</body>
+{% endblock %}
+

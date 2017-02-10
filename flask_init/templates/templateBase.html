@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        {% block head %}
+        <title>{% block title %} {% endblock %} - Cloud Flask</title>
+        {% endblock %}
+    </head>
+    
+    <body>
+        <h1>Cloud Flask</h1>
+        {% with messages = get_flashed_messages()  %} <!--get each message in flash in turn-->
+        {% if messages %}
+        <div id="messages">
+        <ul class=flashes>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        </div>
+        {% endif %}
+        {% endwith %}
+        
+        <div id="content">
+            {% block content %}{% endblock%}
+        </div>
+        
+        <footer>
+            {% block footer %}
+            &copy; Copyright 2017 Cloud Archipelago
+            {% endblock %}
+        </footer>
+    </body>
+</html>

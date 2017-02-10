@@ -3,7 +3,7 @@ import os
 # Press n to advance, c to continue
 # print(i) to see value
 
-from flask import Flask, request, render_template, url_for, redirect
+from flask import Flask, request, render_template, url_for, redirect, flash
 #Define instance of flask class
 app = Flask(__name__) #Ensures unique application name
 
@@ -31,6 +31,7 @@ def login():
     error = None
     if request.method == 'POST':
         if (valid_login(request.form['username'], request.form['password'])): # %d already assigned to int
+            flash("successfully logged in") #Stores on the session cookie, resets after retrieval
             return redirect(url_for('welcome', username=request.form.get('username')))
         else:
             error = 'incorrect username or password'
@@ -51,4 +52,5 @@ if __name__ == '__main__':
     host = os.getenv('IP', '0.0.0.0')  # Get the host
     port = int(os.getenv('PORT', 5000))
     app.debug = True # shows full error even to outsiders
+    app.secret_key = 'dsafdasgdag233d'
     app.run(host=host, port=port)
