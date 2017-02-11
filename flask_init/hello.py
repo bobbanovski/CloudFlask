@@ -1,4 +1,5 @@
 import os
+import pymysql
 import logging
 #import pdb; pdb.set_trace() #Use this to stop at a line then progress step by step.
 # Press n to advance, c to continue
@@ -38,7 +39,23 @@ def login():
     return render_template('login.html', error=error)
     
 def valid_login(username, password):
-    if username == password:
+    #SQL query
+    MYSQL_DATABASE_HOST = os.getenv('IP', '0,0,0,0')
+    MYSQL_DATABASE_USER = 'bobbanovski'
+    MYSQL_DATABASE_PASSWORD = ''
+    MYSQL_DATABASE_DB = 'cloudflaskdb'
+    conn = pymysql.connect(
+        host = MYSQL_DATABASE_HOST,
+        user = MYSQL_DATABASE_USER,
+        passwd = MYSQL_DATABASE_PASSWORD,
+        db = MYSQL_DATABASE_DB
+        )
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM users WHERE username='%s' AND password='%s'" %
+        (username, password))
+    data = cursor.fetchone()
+    
+    if data:
         return True
     else:
         return False
