@@ -3,7 +3,7 @@ import os
 # Press n to advance, c to continue
 # print(i) to see value
 
-from flask import Flask, request, render_template, url_for, redirect, flash, make_response
+from flask import Flask, request, render_template, url_for, redirect, flash, session
 #Define instance of flask class
 app = Flask(__name__) #Ensures unique application name
 
@@ -27,9 +27,8 @@ def login():
     if request.method == 'POST':
         if (valid_login(request.form['username'], request.form['password'])): # %d already assigned to int
             flash("successfully logged in") #Stores on the session cookie, resets after retrieval
-            response = make_response(redirect(url_for('welcome')))
-            response.set_cookie('username', request.form.get('username'))
-            return response
+            session['username'] = request.form.get('username')
+            return redirect(url_for('welcome'))
         else:
             error = 'incorrect username or password'
     return render_template('login.html', error=error)
@@ -42,16 +41,13 @@ def valid_login(username, password):
         
 @app.route('/logout')
 def logout():
-    response = make_response(redirect(url_for('login')))
-    response.set_cookie('username', '', expires=0) #Set the cookie's lifetime to 0
-    return response
+    session.pop('username', None)
+    return redirect(url_for('login'))
         
 @app.route('/')
-#def welcome(username):
 def welcome():
-    username = request.cookies.get('username')
-    if username:
-        return render_template('welcome.html', username=username)
+    if 'username' in session:
+        return render_template('welcome.html', username=session['username'])
     else:
         return redirect(url_for('login'))
     
@@ -60,5 +56,5 @@ if __name__ == '__main__':
     host = os.getenv('IP', '0.0.0.0')  # Get the host
     port = int(os.getenv('PORT', 5000))
     app.debug = True # shows full error even to outsiders
-    app.secret_key = 'dsafdasgdag233d'
+    app.secret_key = 's\xce\xabB|\x10\xae\x0c\x87\xe2\xff(2(\xa8\x1a_\x8a\x16r\xa81\xc3\n'
     app.run(host=host, port=port)
