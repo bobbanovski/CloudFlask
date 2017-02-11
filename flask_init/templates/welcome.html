@@ -2,8 +2,17 @@
 
 {% block title %} Welcome Page {% endblock %}
 
+{% block head %}
+<script
+  src="https://code.jquery.com/jquery-3.1.1.min.js"
+  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+  crossorigin="anonymous"></script>
+{{ super()}} <!--Superimpose over block hed in templateBase-->
+{% endblock%}
 
 {% block content %}
     <h3>Welcome, {{ username }}</h3>
+    
+    <a href="{{url_for('logout') }}">Log Out</a>
 {% endblock %}
 
