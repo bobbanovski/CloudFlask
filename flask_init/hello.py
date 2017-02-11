@@ -1,4 +1,5 @@
 import os
+import logging
 #import pdb; pdb.set_trace() #Use this to stop at a line then progress step by step.
 # Press n to advance, c to continue
 # print(i) to see value
@@ -6,6 +7,7 @@ import os
 from flask import Flask, request, render_template, url_for, redirect, flash, session
 #Define instance of flask class
 app = Flask(__name__) #Ensures unique application name
+from logging.handlers import RotatingFileHandler #prevents filling of space on server
 
 @app.route('/users/<username>')
 def usersPage(username):
@@ -31,6 +33,8 @@ def login():
             return redirect(url_for('welcome'))
         else:
             error = 'incorrect username or password'
+            app.logger.warning('incorrect username or password for user: %s',
+                request.form.get('username')) #can set levels of log eg warning
     return render_template('login.html', error=error)
     
 def valid_login(username, password):
@@ -57,4 +61,8 @@ if __name__ == '__main__':
     port = int(os.getenv('PORT', 5000))
     app.debug = True # shows full error even to outsiders
     app.secret_key = 's\xce\xabB|\x10\xae\x0c\x87\xe2\xff(2(\xa8\x1a_\x8a\x16r\xa81\xc3\n'
+    #enable logging, save to error.log, maximum size of 10MB
+    handler = RotatingFileHandler('error.log', maxBytes=10000000, backupCount = 1)
+    handler.setLevel(logging.INFO)
+    app.logger.addHandler(handler)
     app.run(host=host, port=port)
