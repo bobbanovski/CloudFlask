@@ -10,7 +10,7 @@ def login():
 def register():
     form = RegisterForm()
     if form.validate_on_submit():
-        return(url_for('registersuccess'))
+        return redirect(url_for('registersuccess'))
     return render_template('author/register.html', form=form)
     
 @app.route('/registersuccess')
