@@ -1,13 +1,18 @@
 from flask_init import app
-from flask import render_template, redirect, url_for, session
+from flask import render_template, redirect, url_for, session, request
 from author.form import RegisterForm, LoginForm
 from flask_init import db
 from author.models import Author
+from author.decorators import login_required
 
 @app.route('/login', methods=('GET', 'POST'))
 def login():
     form = LoginForm()
     error = ""
+    
+    if request.method == 'GET' and request.args.get('next'):
+        session['next'] = request.args.get('next')
+        
     if form.validate_on_submit():
         author = Author.query.filter_by(
             username = form.username.data,
@@ -15,7 +20,12 @@ def login():
             ).limit(1)
         if author.count():
             session['username'] = form.username.data
-            return redirect(url_for('loginSuccess'))
+            if 'next' in session:
+                next = session.get('next')
+                session.pop('next')
+                return redirect(next)
+            else:
+                return redirect(url_for('loginSuccess'))
         else:
             error = "Login unsuccessful"
     return render_template('author/login.html', form=form, error=error)
@@ -32,5 +42,6 @@ def registersuccess():
     return "Author registered successfully"
     
 @app.route('/loginSuccess')
+@login_required
 def loginSuccess():
     return "Logged in successfully"
