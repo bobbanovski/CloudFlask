@@ -4,6 +4,7 @@ from author.form import RegisterForm, LoginForm
 from flask_init import db
 from author.models import Author
 from author.decorators import login_required
+import bcrypt
 
 @app.route('/login', methods=('GET', 'POST'))
 def login():
@@ -14,18 +15,21 @@ def login():
         session['next'] = request.args.get('next')
         
     if form.validate_on_submit():
-        author = Author.query.filter_by(
-            username = form.username.data,
-            password = form.password.data
+        authors = Author.query.filter_by(
+            username = form.username.data
             ).limit(1)
-        if author.count():
-            session['username'] = form.username.data
-            if 'next' in session:
-                next = session.get('next')
-                session.pop('next')
-                return redirect(next)
+        if authors.count():
+            author = authors[0]
+            if bcrypt.hashpw(form.password.data, author.password) == author.password:
+                session['username'] = form.username.data
+                if 'next' in session:
+                    next = session.get('next')
+                    session.pop('next')
+                    return redirect(next)
+                else:
+                    return redirect(url_for('loginSuccess'))
             else:
-                return redirect(url_for('loginSuccess'))
+                error = "Login unsuccessful"
         else:
             error = "Login unsuccessful"
     return render_template('author/login.html', form=form, error=error)
@@ -45,3 +49,8 @@ def registersuccess():
 @login_required
 def loginSuccess():
     return "Logged in successfully"
+    
+@app.route('/logout')
+def logout():
+    session.pop('username')
+    return redirect(url_for('index'))

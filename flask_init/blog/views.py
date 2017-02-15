@@ -5,6 +5,7 @@ from flask_init import db
 from author.models import Author
 from blog.models import Blog
 from author.decorators import login_required
+import bcrypt
 
 @app.route('/')
 @app.route('/index')
@@ -24,11 +25,13 @@ def setup():
     form = SetupForm()
     error = ""
     if form.validate_on_submit():
+        salt = bcrypt.gensalt() #generate password salt
+        hashedPassword = bcrypt.hashpw(form.password.data, salt) 
         author = Author(
             form.fullname.data,
             form.email.data,
             form.username.data,
-            form.password.data,
+            hashedPassword,
             True
             )
         db.session.add(author)
