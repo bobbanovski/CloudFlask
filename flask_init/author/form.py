@@ -16,3 +16,12 @@ class RegisterForm(Form): #creates fields from
         ])
     confirm = PasswordField("Confirm Password")
     
+class LoginForm(Form):
+    username = StringField("Username", [
+        validators.Required(),
+        validators.Length(min=4,max=25)
+        ])
+    password = PasswordField("Password", [
+        validators.Required(),
+        validators.Length(min=4, max=80)
+        ])
