@@ -5,6 +5,7 @@ class Blog(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80))
     admin = db.Column(db.Integer, db.ForeignKey('author.id'))
+    post = db.relationship('Post', backref='blog', lazy='dynamic')
     
     def __init__(self, name, admin):
         self.name = name
@@ -22,9 +23,9 @@ class Post(db.Model):
     slug = db.Column(db.String(256), unique=True)
     publishDate = db.Column(db.DateTime)
     live = db.Column(db.Boolean) #Instead of deleting, mark as false
-    category = db.Column(db.Integer, db.ForeignKey('category.id'))
+    categoryId = db.Column(db.Integer, db.ForeignKey('category.id'))
     
-    def __init__(self, blog, author, title, body, slug=None, publishDate=None, live=True):
+    def __init__(self, blog, author, category, title, body, slug=None, publishDate=None, live=True):
         self.blogId=blog.id
         self.authorId=author.id
         self.title=title
@@ -35,6 +36,8 @@ class Post(db.Model):
         else:
             self.publishDate=publishDate
         self.live=live
+        
+        self.categoryId=category.id
         
     def __repr__(self):
         return '<post %r>' % self.title
