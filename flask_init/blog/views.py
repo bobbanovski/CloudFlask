@@ -4,7 +4,7 @@ from blog.form import SetupForm
 from flask_init import db
 from author.models import Author
 from blog.models import Blog
-from author.decorators import login_required
+from author.decorators import login_required, author_required
 import bcrypt
 
 @app.route('/')
@@ -16,7 +16,7 @@ def index():
     return "hello world"
 
 @app.route('/admin')
-@login_required
+@author_required
 def admin():
     if session.get('is_author'):
         return render_template('/blog/admin.html')
@@ -58,3 +58,12 @@ def setup():
             error = "error in creating blog"
     
     return render_template('blog/setup.html', form=form, error=error)
+    
+@app.route('/post')
+@author_required
+def post():
+    return "blog post"
+    
+@app.route('/article')
+def article():
+    return render_template('blog/article.html')
