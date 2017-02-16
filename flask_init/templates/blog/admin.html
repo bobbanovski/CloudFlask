@@ -20,6 +20,17 @@
         <p>
             Welcome, {{ session.username }}
         </p>
+        
+        <div class="post-list">
+            {% for post in posts %}
+            <div class="post-item">
+                <h4><a href="{{ url_for('article', slug=post.slug) }}">{{post.title}}</a></h4>
+                <p class="text-muted">Posted by {{post.author.fullname}} on {{post.publishDate.strftime('%Y-%m-%d')}}
+                in <a href="#">{{post.category.name}}</a>
+                </p>
+            </div>
+            {% endfor %}
+        </div>
         <p>
             <a href = "{{ url_for('logout') }}">Log Out</a>
         </p>
