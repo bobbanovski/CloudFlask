@@ -25,6 +25,8 @@ class Post(db.Model):
     live = db.Column(db.Boolean) #Instead of deleting, mark as false
     categoryId = db.Column(db.Integer, db.ForeignKey('category.id'))
     
+    category = db.relationship('Category', backref = db.backref('posts', lazy='dynamic')) #1-1 relationship
+    
     def __init__(self, blog, author, category, title, body, slug=None, publishDate=None, live=True):
         self.blogId=blog.id
         self.authorId=author.id
@@ -45,6 +47,8 @@ class Post(db.Model):
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
+    
+    #post = db.relationship('Post', backref='category', lazy='dynamic') #1-1 relationship
     
     def __init__(self,name):
         self.name=name

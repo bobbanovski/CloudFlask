@@ -8,6 +8,8 @@ class Author(db.Model):
     password = db.Column(db.String(60))
     is_author = db.Column(db.Boolean)
     
+    post = db.relationship('Post', backref='author', lazy='dynamic') #1-1 relationship
+    
     #what happens when object is first defined - instantiated
     def __init__(self, fullname, email, username, password, is_author=False):
         self.fullname = fullname
