@@ -1,6 +1,6 @@
 from flask_init import app #imports the __init__.py file
 from flask import render_template, flash, redirect, url_for, session, abort
-from blog.form import SetupForm
+from blog.form import SetupForm, PostForm
 from flask_init import db
 from author.models import Author
 from blog.models import Blog
@@ -62,7 +62,8 @@ def setup():
 @app.route('/post')
 @author_required
 def post():
-    return "blog post"
+    form=PostForm()
+    return render_template('blog/post.html', form=form)
     
 @app.route('/article')
 def article():
