@@ -27,7 +27,7 @@ def login():
                     session.pop('next')
                     return redirect(next)
                 else:
-                    return redirect(url_for('loginSuccess'))
+                    return redirect(url_for('index'))
             else:
                 error = "Login unsuccessful"
         else:
@@ -44,11 +44,6 @@ def register():
 @app.route('/registersuccess')
 def registersuccess():
     return "Author registered successfully"
-    
-@app.route('/loginSuccess')
-@login_required
-def loginSuccess():
-    return "Logged in successfully"
     
 @app.route('/logout')
 def logout():
