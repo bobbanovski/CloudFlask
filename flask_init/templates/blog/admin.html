@@ -24,7 +24,8 @@
         <div class="post-list">
             {% for post in posts.items %}
             <div class="post-item">
-                <h4><a href="{{ url_for('article', slug=post.slug) }}">{{post.title}}</a></h4>
+                <h4><a href="{{ url_for('article', slug=post.slug) }}">{{post.title}}</a>
+                {% if not post.live %} - Deleted{% endif %}</h4>
                 <p class="text-muted">Posted by {{post.author.fullname}} on {{post.publishDate.strftime('%Y-%m-%d')}}
                 in <a href="#">{{post.category.name}}</a>
                 </p>

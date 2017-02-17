@@ -36,6 +36,7 @@ class Post(db.Model):
         self.authorId=author.id
         self.title=title
         self.body=body
+        self.image = image
         self.slug=slug
         if publishDate is None:
             self.publishDate=datetime.utcnow()
