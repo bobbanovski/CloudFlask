@@ -10,3 +10,5 @@ DB_HOST = os.getenv('IP', '0,0,0,0')
 DB_URI = "mysql+pymysql://%s:%s@%s/%s" % (DB_USERNAME, DB_PASSWORD, DB_HOST, DB_NAME)
 SQLALCHEMY_DATABASE_URI = DB_URI #cannot change sqlalchemy variable name
 SQLALCHEMY_TRACK_MODIFICATIONS = True
+UPLOADED_IMAGES_DEST = '/home/ubuntu/workspace/flask_init/static/images'
+UPLOADED_IMAGES_URL = '/static/images'
