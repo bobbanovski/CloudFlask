@@ -36,3 +36,11 @@ class userTest(unittest.TestCase):
         conn.close()
         
         self.app = app.test_client()
+        
+    def tearDown(self): # takes down test database after test
+        db.session.remove()
+        engine = sqlalchemy.create_engine(self.db_uri)
+        conn = engine.connect()
+        conn.execute('commit')
+        conn.execute("DROP_DATABASE " + app.config['BLOG_DATABASE_NAME'])
+        conn.close()
