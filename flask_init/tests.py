@@ -59,8 +59,30 @@ class userTest(unittest.TestCase):
             
     def test_create_blog(self): #must always start with test_ to run automatically
         rv = self.create_blog()
-        print(rv.data)
+        #print(rv.data)
         assert 'blog created' in str(rv.data)
+    
+    def login(self, username, password):
+        return self.app.post('/login', data=dict(
+            username=username,
+            password=password
+            ),
+            follow_redirects = True)
+    
+    def logout(self):
+        return self.app.get('/logout', follow_redirects=True)
+    
+    def test_login_logout(self):
+        self.create_blog()
+        rv = self.login('bobbanovski','muhPassword')
+        assert 'user bobbanovski logged in' in str(rv.data)
+        rv = self.logout()
+        assert 'user logged out' in str(rv.data)
+        
+        rv = self.login('bobbanovski','completelyWrong')
+        assert 'Login unsuccessful' in str(rv.data)
+        rv = self.login('wrongname', 'muhPassword')
+        assert 'Login unsuccessful' in str(rv.data)
         
 if __name__ == '__main__':
     unittest.main()
